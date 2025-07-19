@@ -62,7 +62,7 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-image: url(${(props) => props.bgPhoto});
   background-size: cover;
   background-position: center center;
-  height: 200px;
+  aspect-ratio: 3 / 4;
   font-size: 66px;
   cursor: pointer;
   &:first-child {
@@ -102,10 +102,52 @@ const Overlay = styled(motion.div)`
 const BigMovie = styled(motion.div)`
   position: absolute;
   width: 40vw;
-  height: 80vh;
+  aspect-ratio: 3 / 4;
   left: 0;
   right: 0;
   margin: 0 auto;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.black.lighter};
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+`;
+
+const BigTitle = styled.h3`
+  color: ${(props) => props.theme.white.lighter};
+  padding: 0 20px;
+  font-size: 46px;
+  position: absolute;
+  bottom: 125px;
+  width: calc(100% - 40px);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: 600;
+`;
+
+const BigOverview = styled.p`
+  padding: 0 20px;
+  position: absolute;
+  bottom: 10px;
+  width: calc(100% - 40px);
+  height: 120px;
+  color: ${(props) => props.theme.white.lighter};
+  line-height: 1.4;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+  }
 `;
 
 const rowVariants = {
@@ -173,6 +215,9 @@ function Home() {
     navigate(`/movies/${movieId}`);
   };
   const onOverlayClick = () => navigate("/");
+  const clickedMovie =
+    bigMovieMatch?.params.movieId &&
+    data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId!);
   return (
     <Wrapper>
       {isLoading ? (
@@ -219,7 +264,7 @@ function Home() {
             </AnimatePresence>
           </Slider>
           <AnimatePresence>
-            {bigMovieMatch ? (
+            {bigMovieMatch && clickedMovie ? (
               <>
                 <Overlay
                   onClick={onOverlayClick}
@@ -227,10 +272,25 @@ function Home() {
                   animate={{ opacity: 1 }}
                 />
                 <BigMovie
-                  style={{ top: bigMovieY }}
-                  layoutId={bigMovieMatch.params.movieId}
+                  style={{
+                    top: bigMovieY,
+                    backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%), url(${makeImagePath(
+                      clickedMovie.backdrop_path,
+                      "w500"
+                    )})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center top",
+                  }}
+                  layoutId={bigMovieMatch.params.movieId || ""}
                 >
-                  hello
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.25, duration: 0.3, type: "tween" }}
+                  >
+                    <BigTitle>{clickedMovie.title}</BigTitle>
+                    <BigOverview>{clickedMovie.overview}</BigOverview>
+                  </motion.div>
                 </BigMovie>
               </>
             ) : null}
