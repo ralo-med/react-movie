@@ -1,10 +1,10 @@
+import { useLocation } from "react-router";
+
 function Search() {
-  return (
-    <div>
-      <h1>Search</h1>
-      <p>Search content will be here</p>
-    </div>
-  );
+  const location = useLocation();
+  const keyword = new URLSearchParams(location.search).get("keyword");
+  console.log(keyword);
+  return null;
 }
 
 export default Search;
