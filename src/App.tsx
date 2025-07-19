@@ -1,19 +1,24 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Home from "./Routes/Home";
 import Tv from "./Routes/Tv";
 import Search from "./Routes/Search";
 import Header from "./components/Header";
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/tv" element={<Tv />} />
-        <Route path="/search" element={<Search />} />
-      </Routes>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/tv" element={<Tv />} />
+          <Route path="/search" element={<Search />} />
+        </Routes>
+      </Router>
+    </QueryClientProvider>
   );
 }
 

@@ -1,10 +1,6 @@
 function Tv() {
   return (
-    <div>
-      <h1>TV Shows</h1>
-      <p>TV Shows content will be here</p>
-    </div>
+    <div style={{ backgroundColor: "whitesmoke", height: "200vh" }}>tv</div>
   );
 }
-
 export default Tv;
