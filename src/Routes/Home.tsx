@@ -11,7 +11,7 @@ import {
   getPopularMovies,
   getTopRatedMovies,
   getUpcomingMovies,
-  type IMovie,
+  type IBaseItem,
 } from "../api";
 import { makeImagePath } from "../utils";
 import { useNavigate, useMatch } from "react-router-dom";
@@ -149,28 +149,32 @@ function Home() {
 
   const onOverlayClick = () => navigate("/");
 
-  const findMovieAndCategory = (movieId: string) => {
-    if (nowPlayingData?.results.find((m: IMovie) => m.id === +movieId)) {
+  const findMovieAndCategory = (
+    movieId: string
+  ): { movie: IBaseItem | undefined; category: string | undefined } => {
+    if (nowPlayingData?.results.find((m: IBaseItem) => m.id === +movieId)) {
       return {
-        movie: nowPlayingData.results.find((m: IMovie) => m.id === +movieId)!,
+        movie: nowPlayingData.results.find(
+          (m: IBaseItem) => m.id === +movieId
+        )!,
         category: "Now Playing",
       };
     }
-    if (popularData?.results.find((m: IMovie) => m.id === +movieId)) {
+    if (popularData?.results.find((m: IBaseItem) => m.id === +movieId)) {
       return {
-        movie: popularData.results.find((m: IMovie) => m.id === +movieId)!,
+        movie: popularData.results.find((m: IBaseItem) => m.id === +movieId)!,
         category: "Popular Movies",
       };
     }
-    if (topRatedData?.results.find((m: IMovie) => m.id === +movieId)) {
+    if (topRatedData?.results.find((m: IBaseItem) => m.id === +movieId)) {
       return {
-        movie: topRatedData.results.find((m: IMovie) => m.id === +movieId)!,
+        movie: topRatedData.results.find((m: IBaseItem) => m.id === +movieId)!,
         category: "Top Rated Movies",
       };
     }
-    if (upcomingData?.results.find((m: IMovie) => m.id === +movieId)) {
+    if (upcomingData?.results.find((m: IBaseItem) => m.id === +movieId)) {
       return {
-        movie: upcomingData.results.find((m: IMovie) => m.id === +movieId)!,
+        movie: upcomingData.results.find((m: IBaseItem) => m.id === +movieId)!,
         category: "Upcoming Movies",
       };
     }
@@ -196,25 +200,40 @@ function Home() {
           </Banner>
 
           {nowPlayingData && (
-            <Slider data={nowPlayingData} title="Now Playing" />
+            <Slider
+              data={nowPlayingData}
+              title="Now Playing"
+              media_type="movie"
+            />
           )}
-          {popularData && <Slider data={popularData} title="Popular Movies" />}
+          {popularData && (
+            <Slider
+              data={popularData}
+              title="Popular Movies"
+              media_type="movie"
+            />
+          )}
           {topRatedData && (
-            <Slider data={topRatedData} title="Top Rated Movies" />
+            <Slider
+              data={topRatedData}
+              title="Top Rated Movies"
+              media_type="movie"
+            />
           )}
           {upcomingData && nowPlayingData && (
             <Slider
               data={{
                 ...upcomingData,
                 results: upcomingData.results.filter(
-                  (movie: IMovie) =>
+                  (movie: IBaseItem) =>
                     !nowPlayingData.results.some(
-                      (nowPlayingMovie: IMovie) =>
+                      (nowPlayingMovie: IBaseItem) =>
                         nowPlayingMovie.id === movie.id
                     )
                 ),
               }}
               title="Upcoming Movies"
+              media_type="movie"
             />
           )}
 
