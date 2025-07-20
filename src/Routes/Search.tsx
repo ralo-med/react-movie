@@ -31,21 +31,76 @@ const SliderSection = styled.div`
 `;
 
 const SearchInfo = styled.div`
-  padding: 120px 60px 0 60px;
-  margin-bottom: 40px;
+  padding: 120px 60px 40px 60px;
+  margin-bottom: 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent 100%
+  );
 `;
 
 const Title = styled.h1`
-  font-size: 36px;
-  margin-bottom: 18px;
-  font-weight: 700;
+  font-size: 48px;
+  margin-bottom: 24px;
+  font-weight: 800;
+  color: ${(props) => props.theme.white.lighter};
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  letter-spacing: -0.5px;
 `;
 
-const ResultSummary = styled.p`
-  color: ${(props) => props.theme.white.darker};
-  font-size: 24px;
+const ResultSummary = styled.div`
+  display: flex;
+  gap: 32px;
+  margin-top: 16px;
+`;
+
+const ResultCategory = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+`;
+
+const CategoryIcon = styled.div`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: ${(props) => props.color || "#e50914"};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+`;
+
+const CategoryText = styled.span`
+  color: ${(props) => props.theme.white.lighter};
+  font-size: 18px;
   font-weight: 600;
-  line-height: 1.6;
+`;
+
+const CategoryCount = styled.span`
+  color: ${(props) => props.theme.white.darker};
+  font-size: 16px;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 12px;
+  border-radius: 12px;
+  min-width: 24px;
+  text-align: center;
 `;
 
 function Search() {
@@ -124,9 +179,16 @@ function Search() {
         <SearchInfo>
           <Title>Search for "{keyword}"</Title>
           <ResultSummary>
-            Movie: {filteredMovieCount}
-            <br />
-            Tv: {filteredTvCount}
+            <ResultCategory>
+              <CategoryIcon color="#e50914">🎬</CategoryIcon>
+              <CategoryText>Movies</CategoryText>
+              <CategoryCount>{filteredMovieCount}</CategoryCount>
+            </ResultCategory>
+            <ResultCategory>
+              <CategoryIcon color="#0080ff">📺</CategoryIcon>
+              <CategoryText>TV Shows</CategoryText>
+              <CategoryCount>{filteredTvCount}</CategoryCount>
+            </ResultCategory>
           </ResultSummary>
         </SearchInfo>
       )}
