@@ -114,9 +114,9 @@ interface IForm {
 
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const homeMatch = useMatch("/react-movie/");
-  const tvMatch = useMatch("/react-movie/tv");
-  const searchMatch = useMatch("/react-movie/search");
+  const homeMatch = useMatch("/");
+  const tvMatch = useMatch("/tv");
+  const searchMatch = useMatch("/search");
   const inputAnimation = useAnimation();
   const navAnimation = useAnimation();
   const { scrollY } = useScroll();
@@ -147,7 +147,7 @@ function Header() {
   return (
     <Nav variants={navVariants} animate={navAnimation} initial={"top"}>
       <Col>
-        <Link to="/react-movie/">
+        <Link to="/">
           <Logo
             variants={logoVariants}
             whileHover="active"
@@ -162,17 +162,15 @@ function Header() {
         </Link>
         <Items>
           <Item>
-            <Link to="/react-movie/">
-              Home {homeMatch && <Circle layoutId="circle" />}
-            </Link>
+            <Link to="/">Home {homeMatch && <Circle layoutId="circle" />}</Link>
           </Item>
           <Item>
-            <Link to="/react-movie/tv">
+            <Link to="/tv">
               Tv Shows {tvMatch && <Circle layoutId="circle" />}
             </Link>
           </Item>
           <Item>
-            <Link to="/react-movie/search">
+            <Link to="/search">
               Search {searchMatch && <Circle layoutId="circle" />}
             </Link>
           </Item>
