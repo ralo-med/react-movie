@@ -176,7 +176,7 @@ function Slider({ data, title, media_type }: ISliderProps) {
 
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const onBoxClicked = (itemId: number) => {
-    navigate(`/${media_type}/${itemId}`);
+    navigate(`/${media_type === "movie" ? "movies" : "tv"}/${itemId}`);
   };
 
   return (
