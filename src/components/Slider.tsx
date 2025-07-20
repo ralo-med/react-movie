@@ -72,9 +72,8 @@ const Row = styled(motion.div)`
   width: 100%;
 `;
 
-const Box = styled(motion.div)<{ bgPhoto: string }>`
+const Box = styled(motion.div)`
   background-color: white;
-  background-image: url(${(props) => props.bgPhoto});
   background-size: cover;
   background-position: center center;
   aspect-ratio: 3 / 4;
@@ -137,6 +136,7 @@ interface ISliderProps {
   data: IGetResult;
   title: string;
   media_type: "movie" | "tv";
+  onBoxClicked?: (itemId: number) => void;
 }
 
 const rowVariants = {
@@ -155,14 +155,17 @@ const rowVariants = {
   },
 };
 
-function Slider({ data, title, media_type }: ISliderProps) {
+function Slider({ data, title, media_type, onBoxClicked }: ISliderProps) {
   const navigate = useNavigate();
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [[page, direction], setPage] = useState([0, 0]);
 
-  const totalMovies = data.results.length - 1;
-  const maxIndex = Math.floor(totalMovies / offset) - 1;
+  const filteredResults = data.results.filter(
+    (item: IBaseItem) => !!item.backdrop_path
+  );
+  const totalMovies = filteredResults.length;
+  const maxIndex = Math.ceil(totalMovies / offset) - 1;
 
   const paginate = (newDirection: number) => {
     if (leaving || !data) return;
@@ -175,7 +178,7 @@ function Slider({ data, title, media_type }: ISliderProps) {
   };
 
   const toggleLeaving = () => setLeaving((prev) => !prev);
-  const onBoxClicked = (itemId: number) => {
+  const defaultBoxClick = (itemId: number) => {
     navigate(`/${media_type === "movie" ? "movies" : "tv"}/${itemId}`);
   };
 
@@ -215,7 +218,7 @@ function Slider({ data, title, media_type }: ISliderProps) {
             exit="exit"
             transition={{ type: "tween", duration: 1 }}
           >
-            {data?.results
+            {filteredResults
               .slice(offset * index, offset * index + offset)
               .map((item: IBaseItem) => (
                 <Box
@@ -224,9 +227,19 @@ function Slider({ data, title, media_type }: ISliderProps) {
                   whileHover="hover"
                   initial="normal"
                   variants={boxVariants}
-                  onClick={() => onBoxClicked(item.id)}
+                  onClick={() =>
+                    onBoxClicked
+                      ? onBoxClicked(item.id)
+                      : defaultBoxClick(item.id)
+                  }
                   transition={{ type: "tween" }}
-                  bgPhoto={makeImagePath(item.backdrop_path, "w500")}
+                  style={{
+                    backgroundImage: `url(${makeImagePath(
+                      item.backdrop_path,
+                      "w500"
+                    )})`,
+                    backgroundColor: "transparent",
+                  }}
                 >
                   <Info variants={infoVariants}>
                     <h4>{item.title || item.name}</h4>
